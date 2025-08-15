@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 
+import com.ecommerce.product.application.representation.ProductDTO;
 import com.ecommerce.product.domain.entity.Product;
 import com.ecommerce.product.infra.repository.ProductRepository;
 
@@ -24,8 +26,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public Product createProduct(@RequestBody @Valid ProductDTO dto) {
+        return productRepository.save(dto.toEntity());
     }
 
     @GetMapping("/{id}")
