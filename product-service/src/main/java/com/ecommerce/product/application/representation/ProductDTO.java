@@ -14,6 +14,7 @@ public class ProductDTO {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price can't be zero")
     private double price;
     
+    @NotBlank(message = "Description is required")
     @Size(max = 255, message = "Description must be max 255 characters")
     private String description;
 
