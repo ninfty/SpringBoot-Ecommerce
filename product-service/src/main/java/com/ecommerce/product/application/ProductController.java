@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 
 import com.ecommerce.product.application.representation.ProductDTO;
 import com.ecommerce.product.domain.entity.Product;
-import com.ecommerce.product.infra.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,21 +17,21 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @GetMapping
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productService.getAll();
     }
 
     @PostMapping
     public Product createProduct(@RequestBody @Valid ProductDTO dto) {
-        return productRepository.save(dto.toEntity());
+        return productService.save(dto.toEntity());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return productRepository.findById(id)
+        return productService.getById(id)
                 .map(product -> ResponseEntity.ok(product))
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Product not found"));

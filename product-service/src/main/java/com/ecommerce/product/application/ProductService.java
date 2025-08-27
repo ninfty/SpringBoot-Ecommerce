@@ -1,36 +1,33 @@
-package com.ecommerce.order.application;
+package com.ecommerce.product.application;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.ecommerce.order.domain.entity.Order;
-import com.ecommerce.order.infra.repository.OrderRepository;
+import com.ecommerce.product.domain.entity.Product;
+import com.ecommerce.product.infra.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService {
+public class ProductService {
     
-    private final OrderRepository repository;
+    private final ProductRepository repository;
 
-    public List<Order> getAll() {
+    public List<Product> getAll() {
         return repository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
     @Transactional
-    public Order save(Order order) {
-        order.setStatus("CREATED");
-
+    public Product save(Product order) {
         return repository.save(order);
     }
 
-    public Optional<Order> getById(Long id) {
+    public Optional<Product> getById(Long id) {
         return repository.findById(id);
     }
 }
