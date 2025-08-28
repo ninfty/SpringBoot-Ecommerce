@@ -1,4 +1,4 @@
-package com.ecommerce.order.application;
+package com.ecommerce.order.application.controller;
 
 import java.util.List;
 
@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ecommerce.order.application.representation.OrderDTO;
+import com.ecommerce.order.application.dto.OrderDTO;
+import com.ecommerce.order.application.service.OrderAppService;
 import com.ecommerce.order.domain.entity.Order;
 
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderAppService orderService;
 
     @GetMapping
     public List<Order> getAllOrders() {

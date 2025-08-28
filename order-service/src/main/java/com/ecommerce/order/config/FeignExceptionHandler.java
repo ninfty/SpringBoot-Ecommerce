@@ -6,26 +6,27 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.ResponseStatusException;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
+import feign.FeignException;
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<Object> handleResponseStatusException(
-            ResponseStatusException ex, WebRequest request) {
-
-        HttpStatus status = HttpStatus.resolve(ex.getStatusCode().value());
+@RestControllerAdvice
+public class FeignExceptionHandler {
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<Object> handleFeignException(FeignException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.resolve(ex.status());
+        if (status == null || ex.status() < 0) {
+            status = HttpStatus.SERVICE_UNAVAILABLE;
+        }
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", Instant.now());
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
-        body.put("message", ex.getReason());
+        body.put("message", "Upstream service temporarily unavailable");
         body.put("path", ((ServletWebRequest) request).getRequest().getRequestURI());
 
         return new ResponseEntity<>(body, status);

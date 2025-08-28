@@ -1,4 +1,4 @@
-package com.ecommerce.order.application.representation;
+package com.ecommerce.order.application.dto;
 
 import com.ecommerce.order.domain.entity.Order;
 
