@@ -19,23 +19,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderAppService orderService;
+    private final OrderAppService orderAppService;
 
     @GetMapping
     public List<Order> getAllOrders() {
-        return orderService.getAll();
+        return orderAppService.getAll();
     }
 
     @PostMapping
     public Order createOrder(@RequestBody @Valid OrderDTO dto) {
         Order order = dto.toEntity();
 
-        return orderService.save(order);
+        return orderAppService.save(order);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return orderService.getById(id)
+        return orderAppService.getById(id)
                 .map(order -> ResponseEntity.ok(order))
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Order not found"));

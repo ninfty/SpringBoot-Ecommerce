@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ecommerce.order.domain.entity.Order;
+import com.ecommerce.order.domain.entity.OrderItem;
 import com.ecommerce.order.domain.service.OrderDomainService;
 import com.ecommerce.order.infra.client.ProductServiceClient;
 import com.ecommerce.order.infra.repository.OrderRepository;
@@ -32,15 +33,17 @@ public class OrderAppService {
     @Transactional
     public Order save(Order order) {
         try {
-            productServiceClient.getProductById(order.getProductId());
+            for (OrderItem item : order.getItems()) {
+                productServiceClient.getProductById(item.getProductId());
+            }
 
             orderDomainService.markAsCreated(order);
 
             return orderRepository.save(order);
         } catch (FeignException.NotFound e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Product not found with id: " + order.getProductId());
+                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    "One or more products not found");
         }
     }
 

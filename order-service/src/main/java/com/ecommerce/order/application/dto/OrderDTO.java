@@ -1,23 +1,30 @@
 package com.ecommerce.order.application.dto;
 
+import java.util.List;
+
 import com.ecommerce.order.domain.entity.Order;
+import com.ecommerce.order.domain.entity.OrderItem;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
 public class OrderDTO {
-    @NotNull(message = "Product ID is required")
-    private Long productId;
-
-    @NotNull(message = "Quantity is required")
-    @Min(value = 1, message = "The quantity must be at least 1")
-    private int quantity;
+    @NotEmpty(message = "Item list is required")
+    private List<OrderItemDTO> items;
 
     public Order toEntity() {
         Order order = new Order();
-        order.setProductId(this.productId);
-        order.setQuantity(this.quantity);
+        
+        for (OrderItemDTO itemDto : items) {
+            OrderItem item = new OrderItem();
+
+            item.setProductId(itemDto.getProductId());
+            item.setQuantity(itemDto.getQuantity());
+            item.setPrice(itemDto.getPrice());
+            order.addItem(item);
+        }
+
         return order;
     }
 }
