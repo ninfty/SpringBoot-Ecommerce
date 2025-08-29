@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ecommerce.order.application.dto.OrderDTO;
+import com.ecommerce.order.application.representation.request.OrderDTO;
+import com.ecommerce.order.application.representation.response.OrderResponse;
 import com.ecommerce.order.application.service.OrderAppService;
 import com.ecommerce.order.domain.entity.Order;
 
@@ -27,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody @Valid OrderDTO dto) {
+    public OrderResponse createOrder(@RequestBody @Valid OrderDTO dto) {
         Order order = dto.toEntity();
 
         return orderAppService.save(order);

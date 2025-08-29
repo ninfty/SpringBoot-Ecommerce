@@ -1,4 +1,4 @@
-package com.ecommerce.order.application.dto;
+package com.ecommerce.order.application.representation.response;
 
 import lombok.Data;
 

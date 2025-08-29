@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.ecommerce.order.application.dto.ProductResponse;
+import com.ecommerce.order.application.representation.response.ProductResponse;
 
 @FeignClient(name = "product-service", url = "${product.service.url}")
 public interface ProductServiceClient {

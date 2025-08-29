@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ecommerce.order.application.representation.response.OrderItemResponse;
+import com.ecommerce.order.application.representation.response.OrderResponse;
 import com.ecommerce.order.domain.entity.Order;
 import com.ecommerce.order.domain.entity.OrderItem;
 import com.ecommerce.order.domain.service.OrderDomainService;
@@ -31,7 +33,7 @@ public class OrderAppService {
     }
 
     @Transactional
-    public Order save(Order order) {
+    public OrderResponse save(Order order) {
         try {
             for (OrderItem item : order.getItems()) {
                 productServiceClient.getProductById(item.getProductId());
@@ -39,7 +41,19 @@ public class OrderAppService {
 
             orderDomainService.markAsCreated(order);
 
-            return orderRepository.save(order);
+            Order saved = orderRepository.save(order);
+
+            return new OrderResponse(
+                    saved.getId(),
+                    saved.getStatus(),
+                    saved.getItems().stream()
+                            .map(item -> new OrderItemResponse(
+                                    item.getId(),
+                                    item.getProductId(),
+                                    item.getQuantity(),
+                                    item.getPrice()))
+                            .toList(),
+                    saved.getCreatedAt());
         } catch (FeignException.NotFound e) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
